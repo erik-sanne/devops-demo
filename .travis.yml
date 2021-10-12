@@ -1,0 +1,13 @@
+dist: trusty
+
+jobs:
+  include:
+    - stage: Docker build Stage
+      script:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t devops-demo .
+        - docker images
+        - docker tag devops-demo $DOCKER_USERNAME/devops-demo:$TRAVIS_BUILD_NUMBER
+        - docker push $DOCKER_USERNAME/devops-demo:$TRAVIS_BUILD_NUMBER
+        - docker tag devops-demo $DOCKER_USERNAME/devops-demo
+        - docker push $DOCKER_USERNAME/devops-demo:latest
